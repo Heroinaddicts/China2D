@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.10)
+project(China2D)
+SET(China2D ${CMAKE_CURRENT_SOURCE_DIR})
+include("${CMAKE_CURRENT_SOURCE_DIR}/China2D.cmake")
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/Engine)
