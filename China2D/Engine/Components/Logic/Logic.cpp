@@ -1,4 +1,5 @@
 ﻿#include "Logic.h"
+#include "Engine.h"
 
 #include "MultiSys.h"
 #include <vector>
@@ -10,9 +11,11 @@
 #endif //WIN32
 
 namespace China2D {
+	RegistEngineComponent(Logic);
+
     typedef Api::IModule* (*__GetModules)(void);
 
-    ILogic* Logic::GetInstance() {
+    Logic* Logic::GetInstance() {
         static Logic s_Logic;
         return &s_Logic;
     }

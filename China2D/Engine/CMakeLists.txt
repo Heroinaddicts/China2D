@@ -11,6 +11,8 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/Graphics/OpenGL/Glfw/include
     ${OPENGL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/Platform
     ${CMAKE_CURRENT_SOURCE_DIR}/Components/Interface
 )
 
@@ -20,7 +22,10 @@ file(GLOB libGlew "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/OpenGL/Glew/lib/*.lib")
 file(GLOB Interface "${CMAKE_CURRENT_SOURCE_DIR}/Interface/*.*")
 file(GLOB Components "${CMAKE_CURRENT_SOURCE_DIR}/Components/*.*")
 file(GLOB ComponentsInterface "${CMAKE_CURRENT_SOURCE_DIR}/Components/Interface/*.*")
+file(GLOB Log "${CMAKE_CURRENT_SOURCE_DIR}/Components/Log/*.*")
 file(GLOB Logic "${CMAKE_CURRENT_SOURCE_DIR}/Components/Logic/*.*")
+file(GLOB Platform "${CMAKE_CURRENT_SOURCE_DIR}/Platform/*.*")
+file(GLOB PlatformGlfw "${CMAKE_CURRENT_SOURCE_DIR}/Platform/PlatformGlfw/*.*")
 file(GLOB Graphics "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.*")
 file(GLOB GraphicsOpenGL "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/OpenGL/*.*")
 file(GLOB GraphicsVulkan "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/Vulkan/*.*")
@@ -30,7 +35,10 @@ file(GLOB GraphicsDirectX "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/DirectX/*.*")
 source_group(Interface FILES ${Interface})
 source_group(Components FILES ${Components})
 source_group(Components\\Interface FILES ${ComponentsInterface})
+source_group(Components\\Log FILES ${Log})
 source_group(Components\\Logic FILES ${Logic})
+source_group(Platform FILES ${Platform})
+source_group(Platform\\PlatformGlfw FILES ${PlatformGlfw})
 source_group(Graphics FILES ${Graphics})
 source_group(Graphics\\OpenGL FILES ${GraphicsOpenGL})
 source_group(Graphics\\Vulkan FILES ${GraphicsVulkan})
@@ -42,7 +50,10 @@ add_executable(China2D
     ${Interface}
     ${Components}
     ${ComponentsInterface}
+    ${Log}
     ${Logic}
+    ${Platform}
+    ${PlatformGlfw}
     ${Graphics}
     ${GraphicsOpenGL}
     ${GraphicsVulkan}
@@ -57,9 +68,4 @@ target_link_libraries(China2D PRIVATE
     ${OPENGL_LIBRARIES}
     ${libGlew}
     glfw
-)
-
-set_target_properties(China2D PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/Debug
-    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/Release
 )

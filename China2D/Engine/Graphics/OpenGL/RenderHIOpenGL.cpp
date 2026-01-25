@@ -2,35 +2,35 @@
 
 namespace China2D {
 	bool RenderHIOpenGL::Initialize() {
-		return false;
+		return true;
 	}
 
-	bool RenderHIOpenGL::Launch() {
-		return false;
+	Api::eRHI RenderHIOpenGL::GetBackend() const {
+		return Api::eRHI();
 	}
 
 	void RenderHIOpenGL::Shutdown() {
 	}
 
-	void RenderHIOpenGL::SwapBuffers() {
+	Api::IRHISurface* RenderHIOpenGL::CreateSurface(Api::IWindow* window, const std::string& name) {
+		return nullptr;
 	}
 
-	void RenderHIOpenGL::Clear() {
+	Api::IRenderMesh* RenderHIOpenGL::CreateRenderMesh(const std::string& name) {
+		return nullptr;
 	}
 
-// 	Api::IRenderMesh* RenderHIOpenGL::CreateRenderMesh() {
-// 		return nullptr;
-// 	}
-// 
-// 	Api::IIndexBuffer* RenderHIOpenGL::CreateIndexBuffer() {
-// 		return nullptr;
-// 	}
-// 
-// 	Api::ITexture* RenderHIOpenGL::CreateTexture() {
-// 		return nullptr;
-// 	}
-// 
-// 	Api::IShader* RenderHIOpenGL::CreateShader() {
-// 		return nullptr;
-// 	}
+	Api::ITexture* RenderHIOpenGL::CreateTexture(const std::string& name) {
+		return nullptr;
+	}
+
+	Api::IShader* RenderHIOpenGL::CreateShader(const std::string& name) {
+		return nullptr;
+	}
+
+	void RenderHIOpenGL::Begin(Api::IRHISurface* surface) {
+	}
+
+	void RenderHIOpenGL::End(Api::IRHISurface* surface) {
+	}
 }

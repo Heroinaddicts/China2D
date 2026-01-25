@@ -7,7 +7,7 @@ namespace China2D {
     public:
         virtual ~Logic() {}
 
-        static ILogic* GetInstance();
+        static Logic* GetInstance();
 
         Api::IModule* FindModule(const std::string& name) override;
         // 通过 ILogic 继承

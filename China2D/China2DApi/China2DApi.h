@@ -7,23 +7,76 @@
 
 namespace China2D {
 	namespace Api {
+		enum class eIRRType {
+			Surface,
+			Mesh,
+			Texture,
+			Shader,
+			VB,
+			IB
+		};
+
 		class IRR {
 		public:
 			virtual ~IRR() {}
-			IRR(const unsigned int id, const std::string& name) : _ID(id), _Name(name) {}
+			IRR(const uint32_t id, const std::string& name) : _ID(id), _Name(name) {}
 
-			const unsigned int _ID;
+			virtual eIRRType GetRRType() const = 0;
+			virtual void Destroy() = 0;
+
+			const uint32_t _ID;
 			const std::string _Name;
+		};
+
+		class IWindow : public IRR {
+		public:
+			virtual ~IWindow() {}
+
+			virtual void PollEvents() = 0;
+			virtual bool ShouldClose() const = 0;
+
+			virtual Size GetSize() const = 0;
+			virtual void Resize(const Size& size) = 0;
+
+			virtual void* GetNativeHandle() const = 0;
+
+		};
+
+		class IRHISurface : public IRR {
+		public:
+			virtual ~IRHISurface() {}
+
+			virtual IWindow* GetWindow() const = 0;
+
+			virtual Size GetSize() const = 0;
+			virtual void Resize(const Size& size) = 0;
+
+			virtual void Clear() = 0;
+			virtual void Present() = 0;
+
+			virtual void Destroy() = 0;
 		};
 
 		class IVertexBuffer : public IRR {
 		public:
 			virtual ~IVertexBuffer() {}
+			virtual void SetData(const void* data, size_t size) = 0;
 		};
 
 		class IIndexBuffer : public IRR {
 		public:
 			virtual ~IIndexBuffer() {}
+			virtual void SetData(const void* data, size_t size) = 0;
+		};
+
+		class ITexture : public IRR {
+		public:
+			virtual ~ITexture() {}
+		};
+
+		class IShader : public IRR {
+		public:
+			virtual ~IShader() {}
 		};
 
 		class IRenderMesh : public IRR {
@@ -37,51 +90,57 @@ namespace China2D {
 			virtual IIndexBuffer* GetIndexBuffer() = 0;
 		};
 
-		class ITexture : public IRR {
-		public:
-			virtual ~ITexture() {}
-		};
-
-		class IShader : public IRR {
-		public:
-			virtual ~IShader() {}
-		};
-
-
-		class IWindow {
-		public:
-			virtual ~IWindow() {}
-			virtual Size GetSize() const = 0;
-			virtual void Resize(const Size& size) = 0;
-
-// 			virtual IRenderMesh* CreateRenderMesh() = 0;
-// 			virtual IIndexBuffer* CreateIndexBuffer() = 0;
-// 			virtual ITexture* CreateTexture() = 0;
-// 			virtual IShader* CreateShader() = 0;
-
-			virtual void Destroy() = 0;
+		enum class eRHI {
+			OpenGL = 0,
+			DirectX,
+			Vulkan,
+			Metal
 		};
 
 		class IRenderHI {
 		public:
 			virtual ~IRenderHI() {}
 
-			virtual bool Initialize() = 0;
-			virtual bool Launch() = 0;
-			virtual void Shutdown() = 0;
+			virtual eRHI GetBackend() const = 0;
 
-			virtual void SwapBuffers() = 0;
-			virtual void Clear() = 0;
+			virtual IRHISurface* CreateSurface(IWindow* window, const std::string& name) = 0;
 
-			virtual IWindow* CreateWindow(const int width, const int heigh, const std::string& name = "China2D") = 0;
+			virtual IRenderMesh* CreateRenderMesh(const std::string& name) = 0;
+			virtual ITexture* CreateTexture(const std::string& name) = 0;
+			virtual IShader* CreateShader(const std::string& name) = 0;
+
+			virtual void Begin(IRHISurface* surface) = 0;
+			virtual void End(IRHISurface* surface) = 0;
+		};
+
+		enum class ePlatform {
+			GLFW = 0,
+			Android = 1,
+			IOS = 2
+		};
+
+		class IPlatform {
+		public:
+			virtual ~IPlatform() {}
+
+			virtual IWindow* CreateWindow(int w, int h, const std::string& title) = 0;
+		};
+
+		struct EngineDesc {
+			eRHI RHI = eRHI::OpenGL;
+			ePlatform Platform = ePlatform::GLFW;
 		};
 
 		class IEngine {
 		public:
 			virtual ~IEngine() {}
 
-			virtual IRenderHI* GetRenderHI() = 0;
+			virtual void SetEngineDesc(const EngineDesc& desc) = 0;
+			virtual void Shutdown() = 0;
 
+			virtual IPlatform* GetPlatform() const = 0;
+
+			virtual IRenderHI* GetRenderHI() const = 0;
 			virtual const char* GetLaunchParameter(const std::string& name) const = 0;
 
 			virtual void SetMinLogLevel(const unsigned int level) = 0;

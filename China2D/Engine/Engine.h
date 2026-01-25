@@ -4,16 +4,42 @@
 #include "China2DApi.h"
 #include "SafeString.h"
 #include <map>
+#include <set>
 
+#define RegistEngineComponent(Component) \
+	class Component##Factroy {\
+	public:\
+		Component##Factroy() {\
+			Engine::GetInstance()->RegistComponent(Component::GetInstance());\
+		}\
+	};\
+	Component##Factroy __##Component;
+	
 namespace China2D {
 	class IEngineComponent;
+	class IRenderHIPlatform;
+	class IBasePlatform;
 	class Engine : public Api::IEngine {
 	public:
 		virtual ~Engine() {}
 
 		static Engine* GetInstance();
 
-		Api::IRenderHI* GetRenderHI();
+		static unsigned int AllocID() {
+			static unsigned int s_NextID = 0;
+			return s_NextID++;
+		}
+
+		__forceinline const std::string &GetName() const {
+			return _Name;
+		}
+
+		void SetEngineDesc(const Api::EngineDesc& desc) override;
+		bool Launch();
+		void Shutdown() override;
+
+		Api::IPlatform* GetPlatform() const;
+		Api::IRenderHI* GetRenderHI() const override;
 
 		bool AnalysisLaunchParameters(const int argc, const char** args, const char** env);
 		__forceinline const char* GetLaunchParameter(const std::string& name) const {
@@ -36,18 +62,25 @@ namespace China2D {
 		void LogSync(const unsigned int level, const char* header, const char* content, const bool console, const char* file, const int line) override;
 
 		void Update();
-	private:
-		void Initialize();
 
 	private:
-		static Engine* s_Instance;
+		Api::EngineDesc _Desc{};
+
+		IBasePlatform* _Platform = nullptr;
+		IRenderHIPlatform* _RHI = nullptr;
+
+		std::set<Api::IWindow*> _Windows;
 
 		std::map<std::string, std::string> _ParameterMap;
-		std::vector<std::string> _ModuleNames;
-		std::string _Name;
+		
 
+		std::string _Name;
+		std::vector<std::string> _ModuleNames;
+		
 		std::vector<IEngineComponent*> _Components;
 	};
+
+	extern Engine* g_Engine;
 }
 
 #endif //__Engine_h__

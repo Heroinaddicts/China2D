@@ -1,24 +1,29 @@
 #ifndef __RenderHIOpenGL_h__
 #define __RenderHIOpenGL_h__
 
-#include "China2DApi.h"
+#include "IRenderHIPlatform.h"
 
 namespace China2D {
-	class RenderHIOpenGL : public Api::IRenderHI {
+	class RenderHIOpenGL : public IRenderHIPlatform {
 	public:
 		virtual ~RenderHIOpenGL() {}
 
-		// Í¨¹ý IRenderHIOpenGL ¼Ì³Ð
-		bool Initialize() override;
-		bool Launch() override;
-		void Shutdown() override;
-		void SwapBuffers() override;
-		void Clear() override;
+		RenderHIOpenGL(const unsigned int id, const std::string& name) : _ID(id), _Name(name) {}
 
-// 		Api::IRenderMesh* CreateRenderMesh() override;
-// 		Api::IIndexBuffer* CreateIndexBuffer() override;
-// 		Api::ITexture* CreateTexture() override;
-// 		Api::IShader* CreateShader() override;
+		bool Initialize() override;
+		void Shutdown() override;
+
+		Api::eRHI GetBackend() const override;
+		Api::IRHISurface* CreateSurface(Api::IWindow* window, const std::string& name) override;
+		Api::IRenderMesh* CreateRenderMesh(const std::string& name) override;
+		Api::ITexture* CreateTexture(const std::string& name) override;
+		Api::IShader* CreateShader(const std::string& name) override;
+
+		void Begin(Api::IRHISurface* surface) override;
+		void End(Api::IRHISurface* surface) override;
+	private:
+		const unsigned int _ID;
+		const std::string _Name;
 	};
 }
 
