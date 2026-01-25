@@ -25,6 +25,7 @@ namespace China2D {
 
 		static Engine* GetInstance();
 
+#define EngineAllocID Engine::AllocID()
 		static unsigned int AllocID() {
 			static unsigned int s_NextID = 0;
 			return s_NextID++;

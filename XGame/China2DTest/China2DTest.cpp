@@ -10,6 +10,7 @@ bool China2DTest::Initialize(Api::IEngine* const engine) {
 }
 
 bool China2DTest::Launch(Api::IEngine* const engine) {
+	engine->GetPlatform()->CreateWindow(1024, 1024);
     return true;
 }
 

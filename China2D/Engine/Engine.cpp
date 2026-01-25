@@ -86,13 +86,6 @@ namespace China2D {
 			}
 		}
 
-		for (int i = 0; i != _Components.size(); i++) {
-			if (!_Components[i]->Launch(this)) {
-				ErrorLog(this, "Component Launch falid");
-				return false;
-			}
-		}
-
 		switch (_Desc.Platform) {
 		case Api::ePlatform::GLFW: {
 			_Platform = txnew PlatformGlfw();
@@ -127,6 +120,13 @@ namespace China2D {
 			return false;
 		}
 
+		for (int i = 0; i != _Components.size(); i++) {
+			if (!_Components[i]->Launch(this)) {
+				ErrorLog(this, "Component Launch falid");
+				return false;
+			}
+		}
+
         return true;
     }
 
@@ -147,7 +147,7 @@ namespace China2D {
     }
 
     Api::IPlatform* Engine::GetPlatform() const {
-        return nullptr;
+        return _Platform;
     }
 
     Api::IRenderHI* Engine::GetRenderHI() const {
@@ -156,6 +156,8 @@ namespace China2D {
 
     void Engine::Update() {
 		while (true) {
+            _Platform->PullEvents();
+
 			for (int i = 0; i != _Components.size(); i++) {
 				_Components[i]->EarlyUpdate(this);
 			}

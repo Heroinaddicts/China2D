@@ -7,8 +7,9 @@
 
 namespace China2D {
 	namespace Api {
-		enum class eIRRType {
+		enum class eRRType {
 			Surface,
+			Window,
 			Mesh,
 			Texture,
 			Shader,
@@ -19,32 +20,20 @@ namespace China2D {
 		class IRR {
 		public:
 			virtual ~IRR() {}
-			IRR(const uint32_t id, const std::string& name) : _ID(id), _Name(name) {}
+			IRR(const uint32_t id, const std::string& name, const eRRType type) : _ID(id), _Name(name), _Type(type) {}
 
-			virtual eIRRType GetRRType() const = 0;
 			virtual void Destroy() = 0;
 
 			const uint32_t _ID;
 			const std::string _Name;
+			const eRRType _Type;
 		};
 
-		class IWindow : public IRR {
-		public:
-			virtual ~IWindow() {}
-
-			virtual void PollEvents() = 0;
-			virtual bool ShouldClose() const = 0;
-
-			virtual Size GetSize() const = 0;
-			virtual void Resize(const Size& size) = 0;
-
-			virtual void* GetNativeHandle() const = 0;
-
-		};
-
+		class IWindow;
 		class IRHISurface : public IRR {
 		public:
 			virtual ~IRHISurface() {}
+			IRHISurface(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::Surface) {}
 
 			virtual IWindow* GetWindow() const = 0;
 
@@ -60,28 +49,49 @@ namespace China2D {
 		class IVertexBuffer : public IRR {
 		public:
 			virtual ~IVertexBuffer() {}
+			IVertexBuffer(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::VB) {}
 			virtual void SetData(const void* data, size_t size) = 0;
 		};
 
 		class IIndexBuffer : public IRR {
 		public:
 			virtual ~IIndexBuffer() {}
+			IIndexBuffer(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::IB) {}
 			virtual void SetData(const void* data, size_t size) = 0;
 		};
 
 		class ITexture : public IRR {
 		public:
 			virtual ~ITexture() {}
+			ITexture(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::Texture) {}
 		};
 
 		class IShader : public IRR {
 		public:
 			virtual ~IShader() {}
+			IShader(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::Shader) {}
+		};
+
+
+		class IWindow : public IRR {
+		public:
+			virtual ~IWindow() {}
+
+			IWindow(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::Window) {}
+
+			virtual void PollEvents() = 0;
+			virtual bool ShouldClose() const = 0;
+
+			virtual Size GetSize() const = 0;
+			virtual void Resize(const Size& size) = 0;
+
+			virtual void* GetNativeHandle() const = 0;
 		};
 
 		class IRenderMesh : public IRR {
 		public:
 			virtual ~IRenderMesh() {}
+			IRenderMesh(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::Mesh) {}
 
 			virtual void SetVertexData(const void* data, size_t size) = 0;
 			virtual void SetIndexData(const void* data, size_t size) = 0;
@@ -123,7 +133,7 @@ namespace China2D {
 		public:
 			virtual ~IPlatform() {}
 
-			virtual IWindow* CreateWindow(int w, int h, const std::string& title) = 0;
+			virtual IWindow* CreateWindow(int w, int h, const std::string& title = "China2D") = 0;
 		};
 
 		struct EngineDesc {

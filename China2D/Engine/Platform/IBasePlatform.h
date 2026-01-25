@@ -10,6 +10,8 @@ namespace China2D {
 
 		virtual bool Initialize() = 0;
 		virtual void Shutdown() = 0;
+		virtual void PullEvents() = 0;
+		virtual void ReleaseWindow(Api::IWindow* const window) = 0;
 	};
 }
 
