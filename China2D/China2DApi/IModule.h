@@ -2,10 +2,10 @@
 #define __iModule_h__
 
 #include "MultiSys.h"
-#include "China2DApi.h"
 
 namespace China2D {
     namespace Api {
+        class IEngine;
         class IModule {
         public:
             virtual ~IModule() {}

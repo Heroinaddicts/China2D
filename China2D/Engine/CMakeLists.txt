@@ -12,7 +12,6 @@ include_directories(
     ${OPENGL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/Graphics
-    ${CMAKE_CURRENT_SOURCE_DIR}/Platform
     ${CMAKE_CURRENT_SOURCE_DIR}/Components/Interface
 )
 
@@ -24,25 +23,20 @@ file(GLOB Components "${CMAKE_CURRENT_SOURCE_DIR}/Components/*.*")
 file(GLOB ComponentsInterface "${CMAKE_CURRENT_SOURCE_DIR}/Components/Interface/*.*")
 file(GLOB Log "${CMAKE_CURRENT_SOURCE_DIR}/Components/Log/*.*")
 file(GLOB Logic "${CMAKE_CURRENT_SOURCE_DIR}/Components/Logic/*.*")
-file(GLOB Platform "${CMAKE_CURRENT_SOURCE_DIR}/Platform/*.*")
-file(GLOB PlatformGlfw "${CMAKE_CURRENT_SOURCE_DIR}/Platform/PlatformGlfw/*.*")
-file(GLOB Graphics "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.*")
-file(GLOB GraphicsOpenGL "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/OpenGL/*.*")
-file(GLOB GraphicsVulkan "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/Vulkan/*.*")
-file(GLOB GraphicsDirectX "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/DirectX/*.*")
+file(GLOB ResourceManager "${CMAKE_CURRENT_SOURCE_DIR}/Components/ResourceManager/*.*")
+file(GLOB TaskManager "${CMAKE_CURRENT_SOURCE_DIR}/Components/TaskManager/*.*")
 
+
+file(GLOB Graphics "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.*")
 
 source_group(Interface FILES ${Interface})
 source_group(Components FILES ${Components})
 source_group(Components\\Interface FILES ${ComponentsInterface})
 source_group(Components\\Log FILES ${Log})
 source_group(Components\\Logic FILES ${Logic})
-source_group(Platform FILES ${Platform})
-source_group(Platform\\PlatformGlfw FILES ${PlatformGlfw})
+source_group(Components\\ResourceManager FILES ${ResourceManager})
+source_group(Components\\TaskManager FILES ${TaskManager})
 source_group(Graphics FILES ${Graphics})
-source_group(Graphics\\OpenGL FILES ${GraphicsOpenGL})
-source_group(Graphics\\Vulkan FILES ${GraphicsVulkan})
-source_group(Graphics\\DirectX FILES ${GraphicsDirectX})
 source_group(\\ FILES main.cpp Engine.h Engine.cpp)
 
 add_executable(China2D
@@ -52,12 +46,9 @@ add_executable(China2D
     ${ComponentsInterface}
     ${Log}
     ${Logic}
-    ${Platform}
-    ${PlatformGlfw}
+    ${ResourceManager}
+    ${TaskManager}
     ${Graphics}
-    ${GraphicsOpenGL}
-    ${GraphicsVulkan}
-    ${GraphicsDirectX}
     ${Utils}
     Engine.h
     Engine.cpp

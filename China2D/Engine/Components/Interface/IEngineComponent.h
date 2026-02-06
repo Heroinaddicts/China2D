@@ -1,7 +1,7 @@
 #ifndef __IEngineComponent_h__
 #define __IEngineComponent_h__
 
-#include "IModule.h"
+#include "China2DApi.h"
 
 namespace China2D {
 	class Engine;
@@ -21,5 +21,14 @@ namespace China2D {
 		virtual void Release(Engine* const engine) = 0;
 	};
 }
+
+#define RegistEngineComponent(Component) \
+	class Component##Factroy {\
+	public:\
+		Component##Factroy() {\
+			Engine::GetInstance()->RegistComponent(Component::GetInstance());\
+		}\
+	};\
+	Component##Factroy __##Component;
 
 #endif //__IEngineComponent_h__

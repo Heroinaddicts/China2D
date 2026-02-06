@@ -2,9 +2,7 @@
 #include "IEngineComponent.h"
 
 #include "SafeSystem.h"
-#include "Graphics/OpenGL/RenderHIOpenGL.h"
-#include "PlatformGlfw/PlatformGlfw.h"
-
+#include "Window.h"
 #include "Components/Log/Log.h"
 
 namespace China2D {
@@ -18,9 +16,6 @@ namespace China2D {
         return g_Engine;
     }
 
-    void Engine::SetEngineDesc(const Api::EngineDesc& desc) {
-		_Desc = desc;
-    }
 
     void Engine::Shutdown() {
         for (int i = 0; i < _Components.size(); i++) {
@@ -28,21 +23,8 @@ namespace China2D {
         }
         _Components.clear();
 
-        for (auto it = _Windows.begin(); it != _Windows.end(); it++) {
-            (*it)->Destroy();
-        }
-        _Windows.clear();
-
-        if (nullptr != _RHI) {
-            _RHI->Shutdown();
-            txdel _RHI;
-            _RHI = nullptr;
-        }
-
-        if (nullptr != _Platform) {
-            _Platform->Shutdown();
-            txdel _Platform;
-            _Platform = nullptr;
+        if (_Window) {
+            _Window->Destroy();
         }
     }
 
@@ -86,40 +68,6 @@ namespace China2D {
 			}
 		}
 
-		switch (_Desc.Platform) {
-		case Api::ePlatform::GLFW: {
-			_Platform = txnew PlatformGlfw();
-			break;
-		}
-		default:
-			ErrorLog(this, "China2D only support platform glfw now");
-			return false;
-		}
-
-		if (!_Platform->Initialize()) {
-			_Platform->Shutdown();
-			delete _Platform;
-			_Platform = nullptr;
-			return false;
-		}
-
-		switch (_Desc.RHI) {
-		case Api::eRHI::OpenGL: {
-			_RHI = txnew RenderHIOpenGL(AllocID(), "RenderHIOpenGL");
-			break;
-		}
-		default:
-			ErrorLog(this, "China2D only support opengl noew");
-			return false;
-		}
-
-		if (!_RHI->Initialize()) {
-			_RHI->Shutdown();
-			delete _RHI;
-			_RHI = nullptr;
-			return false;
-		}
-
 		for (int i = 0; i != _Components.size(); i++) {
 			if (!_Components[i]->Launch(this)) {
 				ErrorLog(this, "Component Launch falid");
@@ -146,17 +94,8 @@ namespace China2D {
 		Log::GetInstance()->LogSync(level, header, content, console, file, line);
     }
 
-    Api::IPlatform* Engine::GetPlatform() const {
-        return _Platform;
-    }
-
-    Api::IRenderHI* Engine::GetRenderHI() const {
-		return _RHI;
-	}
-
     void Engine::Update() {
 		while (true) {
-            _Platform->PullEvents();
 
 			for (int i = 0; i != _Components.size(); i++) {
 				_Components[i]->EarlyUpdate(this);
@@ -170,5 +109,21 @@ namespace China2D {
 				_Components[i]->LaterUpdate(this);
 			}
         }
+    }
+    bool Engine::Initialize()
+    {
+        return false;
+    }
+
+    Api::IWindow* Engine::CreateWindow(const std::string& title, int width, int height) {
+        return nullptr;
+    }
+
+    Api::IRenderer* Engine::GetRenderer2D() {
+        return nullptr;
+    }
+
+    Api::IResourceManagerApi* Engine::GetResourceManagerApi() {
+        return nullptr;
     }
 }

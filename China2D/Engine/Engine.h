@@ -5,20 +5,10 @@
 #include "SafeString.h"
 #include <map>
 #include <set>
-
-#define RegistEngineComponent(Component) \
-	class Component##Factroy {\
-	public:\
-		Component##Factroy() {\
-			Engine::GetInstance()->RegistComponent(Component::GetInstance());\
-		}\
-	};\
-	Component##Factroy __##Component;
 	
 namespace China2D {
 	class IEngineComponent;
-	class IRenderHIPlatform;
-	class IBasePlatform;
+	class Window;
 	class Engine : public Api::IEngine {
 	public:
 		virtual ~Engine() {}
@@ -35,12 +25,17 @@ namespace China2D {
 			return _Name;
 		}
 
-		void SetEngineDesc(const Api::EngineDesc& desc) override;
+		__forceinline bool IsShutdown() const {
+			return false;
+		}
+
+		bool Initialize() override;
+		Api::IWindow* CreateWindow(const std::string& title, int width, int height) override;
+		Api::IRenderer* GetRenderer2D() override;
+		Api::IResourceManagerApi* GetResourceManagerApi() override;
+
 		bool Launch();
 		void Shutdown() override;
-
-		Api::IPlatform* GetPlatform() const;
-		Api::IRenderHI* GetRenderHI() const override;
 
 		bool AnalysisLaunchParameters(const int argc, const char** args, const char** env);
 		__forceinline const char* GetLaunchParameter(const std::string& name) const {
@@ -65,19 +60,10 @@ namespace China2D {
 		void Update();
 
 	private:
-		Api::EngineDesc _Desc{};
-
-		IBasePlatform* _Platform = nullptr;
-		IRenderHIPlatform* _RHI = nullptr;
-
-		std::set<Api::IWindow*> _Windows;
-
+		Window * _Window;
 		std::map<std::string, std::string> _ParameterMap;
-		
-
 		std::string _Name;
 		std::vector<std::string> _ModuleNames;
-		
 		std::vector<IEngineComponent*> _Components;
 	};
 

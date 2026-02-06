@@ -4,154 +4,38 @@
 #include "MultiSys.h"
 #include "Vector2.h"
 #include "Vector3.h"
+#include "IModule.h"
+#include "IWindow.h"
+#include "IRenderer.h"
+#include "IResourceManagerApi.h"
+#include "ITaskManagerApi.h"
+
+#include "SafeString.h"
 
 namespace China2D {
 	namespace Api {
-		enum class eRRType {
-			Surface,
-			Window,
-			Mesh,
-			Texture,
-			Shader,
-			VB,
-			IB
-		};
-
-		class IRR {
-		public:
-			virtual ~IRR() {}
-			IRR(const uint32_t id, const std::string& name, const eRRType type) : _ID(id), _Name(name), _Type(type) {}
-
-			virtual void Destroy() = 0;
-
-			const uint32_t _ID;
-			const std::string _Name;
-			const eRRType _Type;
-		};
-
-		class IWindow;
-		class IRHISurface : public IRR {
-		public:
-			virtual ~IRHISurface() {}
-			IRHISurface(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::Surface) {}
-
-			virtual IWindow* GetWindow() const = 0;
-
-			virtual Size GetSize() const = 0;
-			virtual void Resize(const Size& size) = 0;
-
-			virtual void Clear() = 0;
-			virtual void Present() = 0;
-
-			virtual void Destroy() = 0;
-		};
-
-		class IVertexBuffer : public IRR {
-		public:
-			virtual ~IVertexBuffer() {}
-			IVertexBuffer(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::VB) {}
-			virtual void SetData(const void* data, size_t size) = 0;
-		};
-
-		class IIndexBuffer : public IRR {
-		public:
-			virtual ~IIndexBuffer() {}
-			IIndexBuffer(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::IB) {}
-			virtual void SetData(const void* data, size_t size) = 0;
-		};
-
-		class ITexture : public IRR {
-		public:
-			virtual ~ITexture() {}
-			ITexture(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::Texture) {}
-		};
-
-		class IShader : public IRR {
-		public:
-			virtual ~IShader() {}
-			IShader(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::Shader) {}
-		};
-
-
-		class IWindow : public IRR {
-		public:
-			virtual ~IWindow() {}
-
-			IWindow(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::Window) {}
-
-			virtual void PollEvents() = 0;
-			virtual bool ShouldClose() const = 0;
-
-			virtual Size GetSize() const = 0;
-			virtual void Resize(const Size& size) = 0;
-
-			virtual void* GetNativeHandle() const = 0;
-		};
-
-		class IRenderMesh : public IRR {
-		public:
-			virtual ~IRenderMesh() {}
-			IRenderMesh(const uint32_t id, const std::string& name) : IRR(id, name, eRRType::Mesh) {}
-
-			virtual void SetVertexData(const void* data, size_t size) = 0;
-			virtual void SetIndexData(const void* data, size_t size) = 0;
-
-			virtual IVertexBuffer* GetVertexBuffer() = 0;
-			virtual IIndexBuffer* GetIndexBuffer() = 0;
-		};
-
-		enum class eRHI {
-			OpenGL = 0,
-			DirectX,
-			Vulkan,
-			Metal
-		};
-
-		class IRenderHI {
-		public:
-			virtual ~IRenderHI() {}
-
-			virtual eRHI GetBackend() const = 0;
-
-			virtual IRHISurface* CreateSurface(IWindow* window, const std::string& name) = 0;
-
-			virtual IRenderMesh* CreateRenderMesh(const std::string& name) = 0;
-			virtual ITexture* CreateTexture(const std::string& name) = 0;
-			virtual IShader* CreateShader(const std::string& name) = 0;
-
-			virtual void Begin(IRHISurface* surface) = 0;
-			virtual void End(IRHISurface* surface) = 0;
-		};
-
-		enum class ePlatform {
-			GLFW = 0,
-			Android = 1,
-			IOS = 2
-		};
-
-		class IPlatform {
-		public:
-			virtual ~IPlatform() {}
-
-			virtual IWindow* CreateWindow(int w, int h, const std::string& title = "China2D") = 0;
-		};
-
-		struct EngineDesc {
-			eRHI RHI = eRHI::OpenGL;
-			ePlatform Platform = ePlatform::GLFW;
-		};
-
 		class IEngine {
 		public:
 			virtual ~IEngine() {}
 
-			virtual void SetEngineDesc(const EngineDesc& desc) = 0;
+			// 引擎初始化
+			virtual const char* GetLaunchParameter(const std::string& name) const = 0;
+
+			__forceinline int GetLaunchParameterInt32(const std::string& name) const {
+				const char* value = GetLaunchParameter(name);
+				if (!value) {
+					return 0;
+				}
+				return SafeString::StringToInt32(value);
+			}
+
+			virtual bool Initialize() = 0;
 			virtual void Shutdown() = 0;
 
-			virtual IPlatform* GetPlatform() const = 0;
+			virtual IWindow* CreateWindow(const std::string& title, int width, int height) = 0;
+			virtual IRenderer* GetRenderer2D() = 0;
 
-			virtual IRenderHI* GetRenderHI() const = 0;
-			virtual const char* GetLaunchParameter(const std::string& name) const = 0;
+			virtual IResourceManagerApi* GetResourceManagerApi() = 0;
 
 			virtual void SetMinLogLevel(const unsigned int level) = 0;
 			virtual unsigned int GetMinLogLevel() = 0;
