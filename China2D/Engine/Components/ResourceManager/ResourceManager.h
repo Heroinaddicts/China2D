@@ -18,13 +18,12 @@ namespace China2D {
 		void LaterUpdate(Engine* const engine) override;
 		void FixedUpdate(Engine* const engine) override;
 		void Release(Engine* const engine) override;
-		void SetAssetPath(const std::string& path) override;
 
-		Api::ITexture* LoadTexture(const std::string& filePath) override;
-		Api::IRenderMesh* LoadMesh(const std::string& filePath) override;
+		Api::ITexture* LoadTexture(const std::string& path) override;
+		Api::IRenderMesh* LoadMesh(const std::string& path) override;
 
-		void LoadTextureAsync(const std::string& filePath, std::function<void(Api::ITexture*)> callback) override;
-		void LoadRenderMeshAsync(const std::string& filePath, std::function<void(Api::IRenderMesh*)> callback) override;
+		void LoadTextureAsync(const std::string& path, std::function<void(Api::ITexture*)> callback) override;
+		void LoadRenderMeshAsync(const std::string& path, std::function<void(Api::IRenderMesh*)> callback) override;
 
 		void DestroyResource(Api::IResource* resource) override;
 	};

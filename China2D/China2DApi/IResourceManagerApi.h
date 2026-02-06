@@ -2,8 +2,7 @@
 #define __IResourceManagerApi_h__
 
 #include "MultiSys.h"
-#include "Vector2.h"
-#include "Vector3.h"
+#include "Structs.h"
 #include "ITexture.h"
 #include "IRenderMesh.h"
 #include "IResource.h"
@@ -13,7 +12,6 @@ namespace China2D {
         class IResourceManagerApi {
         public:
             virtual ~IResourceManagerApi() {}
-			virtual void SetAssetPath(const std::string& path) = 0;
 
             virtual ITexture* LoadTexture(const std::string& filePath) = 0;
             virtual IRenderMesh* LoadMesh(const std::string& filePath) = 0;

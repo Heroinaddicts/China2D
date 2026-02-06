@@ -9,6 +9,12 @@ namespace China2D {
 	public:
 		virtual ~Texture() {}
 
+		static Texture* LoadFromFile(const std::string& path);
+
+	private:
+		Texture(GLuint textureID, int width, int height)
+			: _TextureID(textureID), _Width(width), _Height(height) {}
+
 	private:
 		GLuint _TextureID;
 		int _Width;

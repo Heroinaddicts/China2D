@@ -2,8 +2,7 @@
 #define __IWindow_h__
 
 #include "MultiSys.h"
-#include "Vector2.h"
-#include "Vector3.h"
+#include "Structs.h"
 
 namespace China2D {
     namespace Api {

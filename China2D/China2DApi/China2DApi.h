@@ -2,8 +2,7 @@
 #define __China2DApi_h__
 
 #include "MultiSys.h"
-#include "Vector2.h"
-#include "Vector3.h"
+#include "Structs.h"
 #include "IModule.h"
 #include "IWindow.h"
 #include "IRenderer.h"

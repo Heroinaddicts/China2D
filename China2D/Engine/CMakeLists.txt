@@ -12,6 +12,7 @@ include_directories(
     ${OPENGL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/Graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdLibrary
     ${CMAKE_CURRENT_SOURCE_DIR}/Components/Interface
 )
 

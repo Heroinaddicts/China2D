@@ -32,23 +32,22 @@ namespace China2D {
     void ResrouceManager::Release(Engine* const engine) {
     }
 
-    void ResrouceManager::SetAssetPath(const std::string& path) {
-    }
-
-    Api::ITexture* ResrouceManager::LoadTexture(const std::string& filePath) {
+    Api::ITexture* ResrouceManager::LoadTexture(const std::string& path) {
         return nullptr;
     }
 
-    Api::IRenderMesh* ResrouceManager::LoadMesh(const std::string& filePath) {
+    Api::IRenderMesh* ResrouceManager::LoadMesh(const std::string& path) {
         return nullptr;
     }
 
-    void ResrouceManager::LoadTextureAsync(const std::string& filePath, std::function<void(Api::ITexture*)> callback) {
+    void ResrouceManager::LoadTextureAsync(const std::string& path, std::function<void(Api::ITexture*)> callback) {
+
     }
 
-    void ResrouceManager::LoadRenderMeshAsync(const std::string& filePath, std::function<void(Api::IRenderMesh*)> callback) {
+    void ResrouceManager::LoadRenderMeshAsync(const std::string& path, std::function<void(Api::IRenderMesh*)> callback) {
     }
 
     void ResrouceManager::DestroyResource(Api::IResource* resource) {
+
     }
 }
